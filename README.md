@@ -13,7 +13,7 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 - [X] Offline access: Data and icons are cached by extension, allowing access to the last state without having Rotki backend API running
 
 ### Roadmap
-- [ ] Add badge ^ (up) or v (down) to reflect the last 7d or 1m or 6m or 1y portfolio valuation trend
+- [ ] Add icon's badge <img src='https://t3.ftcdn.net/jpg/05/72/97/80/360_F_572978085_QOpHNLOHSZGu9T5qXENChujPGytJ3mdo.jpg' height='10'> (up & down) to reflect the last 7d or 1m or 6m or 1y portfolio valuation trend
 - [ ] New page to display the accounts list
 - [ ] Force refresh option
 - [ ] Multi-currency support (convert USD value to EUR, GBP, etc.)
@@ -43,14 +43,14 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 #### Getting started
 
 ```
-$ make run/dev
+$ make dev
 ```
 
 #### Upload unpacked
 
 - Open `chrome://extensions/`
 - Enable "Developer mode" (top-right corner)
-- Click on "Load unpacked" and select the folder `<workspace>/build`
+- Click on "Load unpacked" and select the folder `./build`
 
 
 ### Release
