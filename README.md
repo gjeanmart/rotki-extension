@@ -9,8 +9,8 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 ### Features
 - [X] Home: Assets list & balances, and net total
 - [X] Settings: Configure your Rotki backend endpoint, timeout, snapshot TTL and more
-- [X] Background worker: Data are refreshed and cached automatically by the service worker evert 15 minutes (configuration TTL)
-- [X] Offline access: Data and icons are cached by extension, allowing access to the last state without having Rotki backend API running
+- [X] Background worker: Data are refreshed and cached automatically by the service worker every 15 minutes (configurable)
+- [X] Offline access: Data and icons are cached by the extension, allowing access to the last state without having Rotki backend API running
 
 ### Roadmap
 - [ ] Add icon's badge <img src='https://t3.ftcdn.net/jpg/05/72/97/80/360_F_572978085_QOpHNLOHSZGu9T5qXENChujPGytJ3mdo.jpg' height='10'> (up & down) to reflect the last 7d or 1m or 6m or 1y portfolio valuation trend
