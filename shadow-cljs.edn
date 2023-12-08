@@ -1,0 +1,18 @@
+;; shadow-cljs configuration
+{:source-paths  ["src/main"
+                 "src/test"]
+
+ :dependencies [[re-frame             "1.4.0"]
+                ;; Promise
+                [funcool/promesa      "11.0.678"]
+                ;; i18n
+                [com.taoensso/tempura "1.5.3"]]
+
+ :builds  {:extension  {:target     :esm
+                        :output-dir "build/js"
+                        :runtime    :custom
+                        :modules    {:shared {:entries [rotki-extension.common.config]}
+                                     :sw     {:init-fn    rotki-extension.sw.core/init
+                                              :depends-on #{:shared}}
+                                     :popup  {:init-fn    rotki-extension.popup.core/init
+                                              :depends-on #{:shared}}}}}}
