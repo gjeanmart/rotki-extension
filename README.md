@@ -23,28 +23,26 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 
 ### Technologies
 
-- [Clojure(Script)](https://clojurescript.org/)
-- [Shadow-cljs](https://github.com/thheller/shadow-cljs)
-- [Re-frame](https://day8.github.io/re-frame/) & [Reagent](https://reagent-project.github.io/)
-- [Tailwing](https://tailwindcss.com/)
-- [Daisy UI](https://daisyui.com/)
-- [Chart.js](https://www.chartjs.org/)
-- [Phosphor-icons](https://phosphoricons.com/)
-- [Tempura (i18n)](https://github.com/taoensso/tempura)
+- **[Clojure(Script)](https://clojurescript.org)**: ClojureScript is a compiler for Clojure that targets JavaScript.
+- **[Shadow-cljs](https://github.com/thheller/shadow-cljs)**: ClojureScript compiler and JS bundler
+- **[Re-frame](https://day8.github.io/re-frame/)** & **[Reagent](https://reagent-project.github.io/)**: A framework for building Modern Web Apps in ClojureScript. It leverages React.
+- **[TailwindCSS](https://tailwindcss.com/)**: CSS framework
+- **[Daisy UI](https://daisyui.com/)**: Tailwind CSS component library
+- **[Chart.js](https://www.chartjs.org/)**: JavaScript charting library
+- **[Phosphor-icons](https://phosphoricons.com/)**: All icons you need
+- **[Tempura (i18n)](https://github.com/taoensso/tempura)**: Simple text localization for Clojure/Script applications
 
 ### Contribute
 
 #### Requirements
 
-- [node.js](https://nodejs.org) (v6.0.0+, most recent version preferred)
-- [yarn](https://www.yarnpkg.com)
+- [Node.js](https://nodejs.org) (v6.0.0+, most recent version preferred)
+- [Yarn](https://www.yarnpkg.com)
 - [Java SDK](https://adoptium.net/) (Version 11+, Latest LTS Version recommended)
 
 #### Getting started
 
-```
-$ make dev
-```
+- Run `$ make dev`
 
 #### Upload unpacked
 
@@ -55,6 +53,6 @@ $ make dev
 
 ### Release
 
-- Increment version in `package.json`
+- Increment version in `package.json` & `build/manifest.json`
 - Run `$ make release`
 - Upload new package (in `dist/`)
