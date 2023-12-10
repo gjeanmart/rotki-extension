@@ -38,9 +38,9 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 
 #### Requirements
 
-- [Node.js](https://nodejs.org) (v6.0.0+, most recent version preferred)
-- [Yarn](https://www.yarnpkg.com)
-- [Java SDK](https://adoptium.net/) (Version 11+, Latest LTS Version recommended)
+- **[Node.js](https://nodejs.org)** (v6.0.0+, most recent version preferred)
+- **[Yarn](https://www.yarnpkg.com)**
+- **[Java SDK](https://adoptium.net/)** (Version 11+, Latest LTS Version recommended)
 
 #### Getting started
 
@@ -48,13 +48,13 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 
 #### Run local extension
 
-- Go to [chrome://extensions](chrome://extensions/)
+- Go to <a href="chrome://extensions">chrome://extensions/</a>
 - Enable "Developer mode" (top-right corner)
-- Click on "Load unpacked" and select the folder `./build`
+- Click on "Load unpacked" and select the folder `build`
 
 
 ### Release on Chrome store
 
 - Increment version in `package.json` & `build/manifest.json`
 - Run `$ make release`
-- Go to [chrome.google.com/webstore/devconsole](https://chrome.google.com/webstore/devconsole) and upload new package (from the folder `./dist`)
+- Go to [chrome.google.com/webstore/devconsole](https://chrome.google.com/webstore/devconsole) and upload new package (from the folder `dist`)
