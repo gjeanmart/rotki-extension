@@ -48,10 +48,9 @@
   
 (defn balances
   "See https://rotki.readthedocs.io/en/stable/api.html#get--api-(version)-balances"
-  [settings & [{:keys [async?]}]]
+  [settings]
   (-> (p/chain (make-request settings  "/balances" {:ignore_cache false
-                                                    :save_data    false
-                                                    :async_query  async?})
+                                                    :save_data    false})
                http/get
                handle-response)
       (p/catch handle-error)))
@@ -103,7 +102,7 @@
 
 (defn fetch-data
   ;; TODO review this big function
-  [{:keys [settings success failure async?]
+  [{:keys [settings success failure]
     :or   {async? false}}]
   (-> (p/let [{cache-data :data cache-date :started-at} (cache/read :rotki-data)
              ;; Ping to verify if rotki is running
@@ -117,7 +116,7 @@
 
               ;; No data in cache or TTL expired
               (p/let [;; Fetch data from rotki
-                      {:keys [assets net_usd]}    (balances settings {:async? async?})
+                      {:keys [assets net_usd]}    (balances settings)
                       assets-identifiers-mappings (get-asset-identifiers-mappings settings (keys assets))
                       ;; Format respomse
                       data                        (fetch-data-make-response {:settings                    settings

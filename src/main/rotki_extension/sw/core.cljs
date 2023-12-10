@@ -79,7 +79,6 @@
     :get-rotki-data
     (p/chain (chrome-extension/storage-get :settings)
              #(rotki/fetch-data {:settings %
-                                 :async?   true
                                  :success  identity
                                  :failure  (fn [err] (log/error "Error fetching data" err))}))
 
