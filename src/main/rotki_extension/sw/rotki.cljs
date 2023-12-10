@@ -102,13 +102,13 @@
 
 (defn fetch-data
   ;; TODO review this big function
-  [{:keys [settings success failure]
-    :or   {async? false}}]
+  [{:keys [settings force-refresh? success failure]
+    :or   {force-refresh? false}}]
   (-> (p/let [{cache-data :data cache-date :started-at} (cache/read :rotki-data)
              ;; Ping to verify if rotki is running
               _ (ping settings)]
 
-        (-> (if cache-data
+        (-> (if (and (not force-refresh?) cache-data)
               ;; Found data in cache
               (success {:data        cache-data
                         :snapshot-at cache-date

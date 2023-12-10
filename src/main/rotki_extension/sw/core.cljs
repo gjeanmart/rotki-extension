@@ -78,9 +78,10 @@
   (condp = alarm-name
     :get-rotki-data
     (p/chain (chrome-extension/storage-get :settings)
-             #(rotki/fetch-data {:settings %
-                                 :success  identity
-                                 :failure  (fn [err] (log/error "Error fetching data" err))}))
+             #(rotki/fetch-data {:settings       %
+                                 :force-refresh? true
+                                 :success        identity
+                                 :failure        (fn [err] (log/error "Error fetching data" err))}))
 
       ;; ------ DEFAULT ------
     (log/error (str "No handler found for alarm " alarm-name))))
