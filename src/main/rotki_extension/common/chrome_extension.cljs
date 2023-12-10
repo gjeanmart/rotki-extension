@@ -83,7 +83,7 @@
 
 (defn alarm-create
   [{:keys [alarm-name delay-min period-min]
-    :or  {delay-min 0 period-min 0}}]
+    :or  {delay-min 1 period-min 0}}]
   (.. js/chrome
       -alarms
       (create (name alarm-name)

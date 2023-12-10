@@ -4,7 +4,7 @@
   "description": "Chrome extension for Rotki (https://rotki.com)",
   "manifest_version": 3,
   "author": "Gregoire Jeanmart <https://greg.jeanmart.me>",
-  "permissions": ["storage", "activeTab", "scripting", "alarms"],
+  "permissions": ["storage", "activeTab", "alarms"],
   "host_permissions": ["http://*:*/*", "https://*:*/*"],
   "icons": {
     "16": "img/rotki-16.png",

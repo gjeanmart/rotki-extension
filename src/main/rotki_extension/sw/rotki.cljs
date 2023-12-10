@@ -2,7 +2,8 @@
   (:require [promesa.core :as p]
             [rotki-extension.common.http :as http]
             [rotki-extension.common.utils :as ut]
-            [rotki-extension.sw.cache :as cache]))
+            [rotki-extension.sw.cache :as cache]
+            [rotki-extension.sw.log :as log]))
 
 (def api-version 1)
 
@@ -47,8 +48,10 @@
   
 (defn balances
   "See https://rotki.readthedocs.io/en/stable/api.html#get--api-(version)-balances"
-  [settings]
-  (-> (p/chain (make-request settings  "/balances" {:ignore_cache false})
+  [settings & [{:keys [async?]}]]
+  (-> (p/chain (make-request settings  "/balances" {:ignore_cache false
+                                                    :save_data    false
+                                                    :async_query  async?})
                http/get
                handle-response)
       (p/catch handle-error)))
@@ -91,7 +94,7 @@
 
 (defn fetch-data-error 
   [error success _failure]
-  (prn "Error while fetching data from rotki :: error=" error)
+  (log/error "Error while fetching data from rotki: " error)
   (p/let [{cache-data :data
            cache-date :started-at} (cache/read :rotki-data {:ignore-ttl? true})]
     (success {:data        cache-data
@@ -100,7 +103,8 @@
 
 (defn fetch-data
   ;; TODO review this big function
-  [{:keys [settings success failure]}]
+  [{:keys [settings success failure async?]
+    :or   {async? false}}]
   (-> (p/let [{cache-data :data cache-date :started-at} (cache/read :rotki-data)
              ;; Ping to verify if rotki is running
               _ (ping settings)]
@@ -113,16 +117,17 @@
 
               ;; No data in cache or TTL expired
               (p/let [;; Fetch data from rotki
-                      {:keys [assets net_usd]}    (balances settings)
+                      {:keys [assets net_usd]}    (balances settings {:async? async?})
                       assets-identifiers-mappings (get-asset-identifiers-mappings settings (keys assets))
                       ;; Format respomse
-                      result                      (fetch-data-make-response {:settings                    settings
+                      data                        (fetch-data-make-response {:settings                    settings
                                                                              :net_usd                     net_usd
                                                                              :assets                      assets
                                                                              :assets-identifiers-mappings assets-identifiers-mappings})
                       ;; Cache data
-                      {snapshot-at :started-at}   (cache/write :rotki-data result {:ttl (:rotki-snapshot-ttl settings)})]
-                (success {:data        result
+                      {snapshot-at :started-at}   (cache/write :rotki-data data 
+                                                               {:ttl (* (:rotki-snapshot-ttl-min settings) 60)})]
+                (success {:data        data
                           :snapshot-at snapshot-at
                           :connected   true})))
             (p/catch #(fetch-data-error % success failure))))

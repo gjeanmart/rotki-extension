@@ -9,7 +9,6 @@
   (keyword env))
 
 (defn env?
-  "Return true if the given matches the running env."
   [e]
   (= (get-env) e))
 
@@ -19,8 +18,8 @@
   {:common      {;; Rotki 
                  :default-settings {:rotki-endpoint         "http://localhost:4242"
                                     :rotki-timeout-sec      60  ;; 1 min
-                                    :rotki-snapshot-ttl     1800 ;; 30 min
-                                    :rotki-refresh-data-min 15  
+                                    :rotki-snapshot-ttl-min 30
+                                    :rotki-refresh-data-min 5 ;; 15  
                                     :theme                  "light"
                                     :hide-zero-balances     true}
 
@@ -52,9 +51,9 @@
                                                       :setting/title                           "Settings"
                                                       :setting/form:endpoint                   "Rotki server endpoint"
                                                       :setting/form:endpoint:tooltip           "The URL of your Rotki backend."
-                                                      :setting/form:snapshot-ttl               "Snapshot TTL (seconds)"
+                                                      :setting/form:snapshot-ttl               "Snapshot TTL (minutes)"
                                                       :setting/form:snapshot-ttl:tooltip       "How long to keep data in cache before invalidating it."
-                                                      :setting/form:timeout                    "Rotki server timeout (seconds)"
+                                                      :setting/form:timeout                    "Rotki server timeout (minutes)"
                                                       :setting/form:timeout:tooltip            "How long to wait for a response from the server."
                                                       :setting/form:background-refresh         "Background refresh (minutes)"
                                                       :setting/form:background-refresh:tooltip "How often to refresh the data in the background."
@@ -68,20 +67,14 @@
                  :theme            {:light "light"
                                     :dark  "dark"}}
    :development {}
-   :staging     {}
    :production  {}})
 
 (defn- get-config
-  "Returns the config for the current environment."
   [config env]
   (merge (:common config)
          (get config (keyword env))))
 
 (defn read
-  "Read a key from the config for the given path.
-  Example:
-  (read)
-  (read :firebase :projectId)"
   ([& path]
    (get-in (read) path))
   ([]

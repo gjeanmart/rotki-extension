@@ -17,8 +17,10 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 - [ ] New page to display the accounts list
 - [ ] Force refresh option
 - [ ] Multi-currency support (convert USD value to EUR, GBP, etc.)
+- [ ] Multi-language support
 - [ ] Insert a button on Etherscan's account page to add an account to Rotki address book straight from Etherscan (and potentially other websites)
 - [ ] Improve light theme and implement dark theme
+- [ ] Release pipeline (increment version, tag, package)
 - [ ] Release to Chrome store
 
 ### Technologies
@@ -30,7 +32,7 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 - **[Daisy UI](https://daisyui.com/)**: Tailwind CSS component library
 - **[Chart.js](https://www.chartjs.org/)**: JavaScript charting library
 - **[Phosphor-icons](https://phosphoricons.com/)**: All icons you need
-- **[Tempura (i18n)](https://github.com/taoensso/tempura)**: Simple text localization for Clojure/Script applications
+- **[Tempura (i18n)](https://github.com/taoensso/tempura)**: Simple text localization for Clojure(Script) applications
 
 ### Contribute
 
@@ -44,15 +46,15 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 
 - Run `$ make dev`
 
-#### Upload unpacked
+#### Run local extension
 
-- Open `chrome://extensions/`
+- Go to [chrome://extensions](chrome://extensions/)
 - Enable "Developer mode" (top-right corner)
 - Click on "Load unpacked" and select the folder `./build`
 
 
-### Release
+### Release on Chrome store
 
 - Increment version in `package.json` & `build/manifest.json`
 - Run `$ make release`
-- Upload new package (in `dist/`)
+- Go to [chrome.google.com/webstore/devconsole](https://chrome.google.com/webstore/devconsole) and upload new package (from the folder `./dist`)

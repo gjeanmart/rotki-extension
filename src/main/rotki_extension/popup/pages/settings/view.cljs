@@ -37,8 +37,8 @@
      [input/base {:label       (tr [:setting/form:snapshot-ttl])
                   :label-right [tooltip (tr [:setting/form:snapshot-ttl:tooltip])]
                   :type        :number
-                  :value       (:rotki-snapshot-ttl @data)
-                  :on-change   #(update-field :rotki-snapshot-ttl (-> % .-target .-value))}]
+                  :value       (:rotki-snapshot-ttl-min @data)
+                  :on-change   #(update-field :rotki-snapshot-ttl-min (-> % .-target .-value))}]
      
      [input/base {:label       (tr [:setting/form:background-refresh])
                   :label-right [tooltip (tr [:setting/form:background-refresh:tooltip])]

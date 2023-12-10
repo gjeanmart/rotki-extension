@@ -5,25 +5,26 @@
             [rotki-extension.common.http :as http]
             [rotki-extension.common.utils :as ut]
             [rotki-extension.sw.cache :as cache]
+            [rotki-extension.sw.log :as log]
             [rotki-extension.sw.rotki :as rotki]))
 
-(defn on-install 
-  []
-  (let [default-settings (config/read :default-settings)]
-    (prn "Installing extension with default-settings::" default-settings)
-    (p/chain (chrome-extension/storage-clear)
-             #(chrome-extension/storage-set :settings default-settings))))
+(defn on-install
+  [{:keys [reason]}]
+  (when (= reason "install") 
+    (let [default-settings (config/read :default-settings)]
+      (log/info "Installing extension with default-settings::" default-settings)
+      (p/chain (chrome-extension/storage-clear)
+               #(chrome-extension/storage-set :settings default-settings)))))
 
 (defn on-message-received
   [{:keys [action data]} _sender send-response]
+  (log/debug "on-message-received : action=" action ", data=" data)
   (let [success (fn [& [result]]
                   (send-response (ut/c->j {:action action
                                            :status :success
                                            :data   result})))
-        failure  (fn [error]
-                   (if (object? error)
-                     (js/console.error error)
-                     (prn error))
+        failure  (fn [error & [{:keys [level] :or {level :error}}]]
+                   (log/log level "on-message-received : action=" action ", data=" data ", error=" error)
                    (send-response (ut/c->j {:action action
                                             :status :failure
                                             :data   error})))]
@@ -58,7 +59,7 @@
                   {:keys [data]} (cache/read cache-key)]
             (if data
               (success data)
-              (failure {:message "Image not found in cache"})))
+              (failure "Image not found in cache" {:level :warning})))
           (p/catch #(failure %)))
 
       ;; ------ ROTKI ------
@@ -71,23 +72,22 @@
       ;; ------ DEFAULT ------
       (failure (str "No handler for action " action)))))
 
-(defn on-alarm-tick 
+(defn on-alarm-tick
   [alarm-name]
+  (log/info "on-alarm-tick : alarm-name=" alarm-name)
   (condp = alarm-name
     :get-rotki-data
-    (-> (p/chain (chrome-extension/storage-get :settings)
-                 #(rotki/fetch-data {:settings %
-                                     :success  identity
-                                     :failure  identity}))
-        (p/catch (fn [error]
-                   (js/console.log error))))
+    (p/chain (chrome-extension/storage-get :settings)
+             #(rotki/fetch-data {:settings %
+                                 :async?   true
+                                 :success  identity
+                                 :failure  (fn [err] (log/error "Error fetching data" err))}))
 
       ;; ------ DEFAULT ------
-    (prn (str "No handler for alarm " alarm-name))))
+    (log/error (str "No handler found for alarm " alarm-name))))
 
 (defn init []
-  (prn "init!")
-  (p/let [_ (chrome-extension/on-install    on-install)
+  (p/let [_ (chrome-extension/on-install    #(on-install %1))
           _ (chrome-extension/on-message    #(on-message-received %1 %2 %3))
           _ (chrome-extension/alarm-on-tick #(on-alarm-tick %1))
           _ (chrome-extension/alarm-create  {:alarm-name :get-rotki-data
