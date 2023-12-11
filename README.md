@@ -4,7 +4,7 @@
 
 A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) ([Github](https://github.com/rotki/rotki)), the extension connects to Rotki backend API (running locally or remotely) and provides basic insights about your portfolio.
 
-<insert image>
+<img src='https://i.ibb.co/Ny58NMM/Screenshot-at-Dec-11-10-42-06-1.png' width='200'>
 
 ### Features
 - [X] Home: Assets list & balances, and net total

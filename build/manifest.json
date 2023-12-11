@@ -4,7 +4,7 @@
   "description": "Chrome extension for Rotki (https://rotki.com)",
   "manifest_version": 3,
   "author": "Gregoire Jeanmart <https://greg.jeanmart.me>",
-  "permissions": ["storage", "activeTab", "alarms"],
+  "permissions": ["storage", "alarms"],
   "host_permissions": ["http://*:*/*", "https://*:*/*"],
   "icons": {
     "16": "img/rotki-16.png",
@@ -18,6 +18,5 @@
   "background": {
     "service_worker": "js/sw.js",
     "type": "module"
-  },
-  "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxH5TbNPYQe9Tc9lh/nZKXf/bqqpVJpZ3sEXFU9LL39R5mnqSYV46HpWHvWeUdyG4PGLc+QrlvoUVkDeuOk9cG8BDX2/Mhq1AL/LlmYRBa5dsqoBT+dF3j9+Wl5pXCR/HfljeQrV+PJ+UzpRX9jlQLR8CeFlbL74maXQJxtjviHQiK+DolwsoCQsGObdBUlWuIkuz8pSbrs59vaVlrBWreVGWvhIquS251pnwfYJTEDeqDWe2+yprjb5PoOvAhPpYMQeWHOrFdMQ4kaMwOiNEMfSOEU9sWdMsVevryYsGjD0RXBBGNwX7GpLc1wHHqPNc2VIKwAJgrqaFw4fAAo/NzQIDAQAB\n-----END PUBLIC KEY-----"
+  }
 }
