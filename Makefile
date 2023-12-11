@@ -17,7 +17,8 @@ cljs/watch:
 	npx shadow-cljs watch extension
 
 cljs/release:
-	npx shadow-cljs release extension
+	npx shadow-cljs release extension \
+		--config-merge '{:closure-defines {common.config/env "production"}}'
 
 
 # === CSS ===
@@ -51,6 +52,7 @@ dev:
 release:
 # TODO check if jq is installed
 # TODO add version as argument and update package.json and build/manifest.json
+# TODO make environment (develpment, production) as argument
 	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	@echo Creating release v.$(PACKAGE_VERSION)
 	make install
