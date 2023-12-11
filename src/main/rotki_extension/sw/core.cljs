@@ -33,6 +33,7 @@
       ;; ------ SETTINGS ------
       :set-settings
       (-> (p/chain (chrome-extension/storage-set :settings data)
+                   #(cache/remove rotki/cache-key)
                    #(success data))
           (p/catch #(failure %)))
 

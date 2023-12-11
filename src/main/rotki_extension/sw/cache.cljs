@@ -1,4 +1,5 @@
 (ns rotki-extension.sw.cache
+   (:refer-clojure :exclude [remove])
    (:require [promesa.core :as p]
              [rotki-extension.common.chrome-extension :as chrome-extension]
              [rotki-extension.common.date :as date]))
@@ -30,3 +31,6 @@
                                             :ttl        ttl})
             #(read key)))
      
+ (defn remove
+  [key]
+  (chrome-extension/storage-set (make-storage-key key) nil))
