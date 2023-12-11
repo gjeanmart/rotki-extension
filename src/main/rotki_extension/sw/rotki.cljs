@@ -1,21 +1,45 @@
 (ns rotki-extension.sw.rotki
-  (:require [promesa.core :as p]
+  (:require [promesa.core :as p] 
             [rotki-extension.common.http :as http]
             [rotki-extension.common.utils :as ut]
             [rotki-extension.sw.cache :as cache]
-            [rotki-extension.sw.log :as log]))
+            [rotki-extension.sw.log :as log]
+            [shadow.resource :as rc]))
+
+;; ------ CONSTANT ------
+
+(def cache-key :rotki-data)
+
+;; ------ MOCKED DATA ------
+
+(defn- mock-request
+  [url]
+  (condp = (.. (js/URL. url) -pathname)
+    "/api/1/ping"            (ut/json->clj (rc/inline "./mock/api_1_ping-response.json"))
+    "/api/1/balances"        (ut/json->clj (rc/inline "./mock/api_1_balances-response.json"))
+    "/api/1/assets/mappings" (ut/json->clj (rc/inline "./mock/api_1_assets_mappings-response.json"))))
+
+;; ------ ROTKI API ------
 
 (def api-version 1)
 
 (def default-headers {"Content-Type" "application/json"})
 
-(defn format-id
+(defn- format-id
   [id]
   (-> id
       keyword
       str
       ;; remove `:` from the beginning of the id
       (subs 1)))
+
+(defn- execute 
+  [{:keys [settings request method]}]
+  (if (:use-mocked-data? settings)
+    (mock-request (:url request))
+    (condp = method
+      :get  (http/get request)
+      :post (http/post request))))
 
 (defn- make-request
   [{:keys [rotki-endpoint rotki-timeout-sec]} path & [params body headers]]
@@ -36,13 +60,11 @@
   [{:keys [message]}]
   (p/rejected message))
 
-;; ------ ROTKI API ------
-
 (defn ping
   "See https://rotki.readthedocs.io/en/stable/api.html#get--api-(version)-ping"
   [settings]
   (-> (p/chain (make-request settings "/ping")
-               http/get
+               #(execute {:settings settings :method :get :request %})
                handle-response)
       (p/catch handle-error)))
   
@@ -51,7 +73,7 @@
   [settings]
   (-> (p/chain (make-request settings  "/balances" {:ignore_cache false
                                                     :save_data    false})
-               http/get
+               #(execute {:settings settings :method :get :request %})
                handle-response)
       (p/catch handle-error)))
 
@@ -60,7 +82,7 @@
   [settings identifiers]
   (when (seq identifiers)
     (-> (p/chain (make-request settings  "/assets/mappings" {} {:identifiers (map format-id identifiers)})
-                 http/post
+                 #(execute {:settings settings :method :post :request  %})
                  handle-response)
         (p/catch handle-error))))
 
@@ -80,22 +102,22 @@
   [{:keys [settings net_usd assets assets-identifiers-mappings]}]
   {:total-balance net_usd
    :assets        (->> (:assets assets-identifiers-mappings)
-                            ;; merge assets balances `assets` with asset metadata `assets-identifiers-mappings`
+                       ;; merge assets balances `assets` with asset metadata `assets-identifiers-mappings`
                        (merge-with merge assets)
-                            ;; convert to vector and format id
+                       ;; convert to vector and format id
                        (reduce-kv #(conj %1 (assoc %3 :id (format-id %2))) [])
-                            ;; attach image_url
+                       ;; attach image_url
                        (map #(assoc % :image_url (get-asset-logo settings %)))
-                            ;; sort by usd_value
+                       ;; sort by usd_value
                        (sort-by #(js/parseFloat (:usd_value %)) >)
-                            ;; transform as sorted map
+                       ;; transform as sorted map
                        (reduce #(assoc %1 (:id %2) %2) (sorted-map)))})
 
 (defn fetch-data-error 
   [error success _failure]
   (log/error "Error while fetching data from rotki: " error)
   (p/let [{cache-data :data
-           cache-date :started-at} (cache/read :rotki-data {:ignore-ttl? true})]
+           cache-date :started-at} (cache/read cache-key {:ignore-ttl? true})]
     (success {:data        cache-data
               :snapshot-at cache-date
               :connected   false})))
@@ -104,7 +126,7 @@
   ;; TODO review this big function
   [{:keys [settings force-refresh? success failure]
     :or   {force-refresh? false}}]
-  (-> (p/let [{cache-data :data cache-date :started-at} (cache/read :rotki-data)
+  (-> (p/let [{cache-data :data cache-date :started-at} (cache/read cache-key)
              ;; Ping to verify if rotki is running
               _ (ping settings)]
 
@@ -123,8 +145,8 @@
                                                                              :net_usd                     net_usd
                                                                              :assets                      assets
                                                                              :assets-identifiers-mappings assets-identifiers-mappings})
-                      ;; Cache data
-                      {snapshot-at :started-at}   (cache/write :rotki-data data 
+                      ;; Cache data 
+                      {snapshot-at :started-at}   (cache/write cache-key data
                                                                {:ttl (* (:rotki-snapshot-ttl-min settings) 60)})]
                 (success {:data        data
                           :snapshot-at snapshot-at
