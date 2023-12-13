@@ -115,7 +115,7 @@
 
 (defn fetch-data-error 
   [error success _failure]
-  (log/error "Error while fetching data from rotki: " error)
+  (log/warning "Error while fetching data from rotki: " error)
   (p/let [{cache-data :data
            cache-date :started-at} (cache/read cache-key {:ignore-ttl? true})]
     (success {:data        cache-data
