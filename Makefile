@@ -17,8 +17,7 @@ cljs/watch:
 	npx shadow-cljs watch extension
 
 cljs/release:
-	npx shadow-cljs release extension \
-		--config-merge '{:closure-defines {common.config/env "production"}}'
+	npx shadow-cljs release extension
 
 
 # === CSS ===
@@ -56,8 +55,10 @@ release:
 	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	@echo Creating release v.$(PACKAGE_VERSION)
 	make install
-	make css/release
 	make cljs/release
+## This is trick to prevent "Uncaught SyntaxError: The requested module './shared.js' does not provide an export named '$jscomp'"	
+	echo 'export var $$jscomp=$$jscomp;' >> build/js/shared.js
+	make css/release
 	cd build ; \
 		mkdir -p ../dist/ ; \
 		zip -r ../dist/rotki-extension-v$(PACKAGE_VERSION).zip * ; \
