@@ -59,7 +59,7 @@ release:
 ## This is trick to prevent "Uncaught SyntaxError: The requested module './shared.js' does not provide an export named '$jscomp'"	
 	echo 'export var $$jscomp=$$jscomp;' >> build/js/shared.js
 	make css/release
+	mkdir -p ../dist/
 	cd build ; \
-		mkdir -p ../dist/ ; \
 		zip -r ../dist/rotki-extension-v$(PACKAGE_VERSION).zip * ; \
 		cd ..
