@@ -4,7 +4,9 @@
   "private": true,
   "devDependencies": {
     "concurrently": "^8.2.2",
+    "cross-fetch": "^4.0.0",
     "daisyui": "^4.4.2",
+    "nock": "^13.4.0",
     "shadow-cljs": "2.26.0",
     "tailwindcss": "^3.3.5"
   },

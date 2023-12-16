@@ -35,6 +35,13 @@ css/release:
 		--output ./build/css/main.css \
 		--minify
 
+
+# === TEST ===
+
+test: 
+	make install
+	npx shadow-cljs compile test
+
 # === ALL ===
 
 dev:
@@ -49,9 +56,9 @@ dev:
 		"make cljs/watch"
 
 release:
-# TODO check if jq is installed
-# TODO add version as argument and update package.json and build/manifest.json
-# TODO make environment (develpment, production) as argument
+# [TODO] check if jq is installed
+# [TODO] add version as argument and update package.json and build/manifest.json
+# [TODO] make environment (develpment, production) as argument
 	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	@echo Creating release v.$(PACKAGE_VERSION)
 	make install

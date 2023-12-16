@@ -13,28 +13,20 @@
 
 ;; ---- URL ----
  
- (defn base64-url-encode
-   [str]
-   (-> str
-       (.toString "base64")
-       (string/replace #"\+" "-")
-       (string/replace #"/" "_")
-       (string/replace #"=" "")))
-
  (defn ->query-params
    [options]
-   (.. (new js/URLSearchParams (c->j options))
+   (.. (js/URLSearchParams. (c->j options))
        (toString)))
 
  
 ;; ---- CRYPTO ----
 
   (defn sha256
-   [buffer]
+   [buffer & [{:keys [encoding] :or {encoding :hex}}]]
    (.. crypto
        (createHash "sha256")
        (update buffer)
-       (digest)))
+       (digest (name encoding))))
  
 
 ;; ---- NUMBER ----

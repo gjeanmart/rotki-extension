@@ -53,7 +53,7 @@
    (:rotki/snapshot-at db)))
 
 ;; ------ NAVIGATION ------
-;; TODO move to utils/router.cljs
+;; [TODO] move to utils/router.cljs
 
 (rf/reg-event-fx
  :root/navigate
@@ -66,7 +66,7 @@
    (:root/page db)))
 
 ;; ------ UTILS ------
-;; TODO move to utils/reframe.cljs
+;; [TODO] move to utils/reframe.cljs
 
 (rf/reg-event-db
  :db/set

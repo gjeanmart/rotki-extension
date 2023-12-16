@@ -18,13 +18,16 @@
 (defn production? []
   (env? :production))
 
+(defn test? []
+  (env? :test))
+
 ;; --- Config
 
 (def config
   {:common      {:default-settings {:rotki-endpoint         "http://localhost:4242"
                                     :rotki-timeout-sec      60
                                     :rotki-snapshot-ttl-min 30
-                                    :rotki-refresh-data-min 5  
+                                    :rotki-refresh-data-min 5
                                     :use-mocked-data?       false
                                     :theme                  "light"
                                     :hide-zero-balances     true}
@@ -41,7 +44,7 @@
                                     :rotki/snapshot-at   0
                                     :rotki/total-balance 0
                                     :rotki/assets        {}}
-                 
+
                  ;; i18n configuration
                  :i18n             {:dictionary {:en {:navbar-top/title                        "rotki"
                                                       :navbar-bottom/assets                    "Assets"
@@ -73,7 +76,7 @@
                  ;; Theme (Daisy UI)
                  :theme            {:light "light"
                                     :dark  "dark"}}
-   
+
    ;; Override common config when env=development
    :development {:default-settings {:rotki-endpoint         "http://localhost:4242"
                                     :rotki-timeout-sec      60
@@ -82,13 +85,22 @@
                                     :use-mocked-data?       false
                                     :theme                  "light"
                                     :hide-zero-balances     true}}
-   
+
+   ;; Override common config when env=test
+      :test        {:default-settings {:rotki-endpoint         "http://localhost:4242"
+                                       :rotki-timeout-sec      60
+                                       :rotki-snapshot-ttl-min 5
+                                       :rotki-refresh-data-min 1
+                                       :use-mocked-data?       true
+                                       :theme                  "light"
+                                       :hide-zero-balances     true}}
+
    ;; Override common config when env=production
    :production  {:default-settings {:rotki-endpoint         "http://localhost:4242"
                                     :rotki-timeout-sec      60
                                     :rotki-snapshot-ttl-min 30
                                     :rotki-refresh-data-min 5
-                                    :use-mocked-data?        false
+                                    :use-mocked-data?       false
                                     :theme                  "light"
                                     :hide-zero-balances     true}}})
 

@@ -44,7 +44,7 @@
 
       ;; ------ IMAGE (CACHING) ------
       :cache-image
-      (p/let [cache-key   (-> data :url ut/sha256 ut/base64-url-encode keyword)
+      (p/let [cache-key   (-> data :url ut/sha256 keyword)
               cache-value (cache/read cache-key)]
         (if-not cache-value
           ;; Not cached
@@ -56,7 +56,7 @@
           (success true)))
 
       :fetch-image
-      (-> (p/let [cache-key      (-> data :url ut/sha256 ut/base64-url-encode keyword)
+      (-> (p/let [cache-key      (-> data :url ut/sha256 keyword)
                   {:keys [data]} (cache/read cache-key)]
             (if data
               (success data)

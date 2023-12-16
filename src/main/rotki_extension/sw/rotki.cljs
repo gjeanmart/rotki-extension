@@ -123,7 +123,7 @@
               :connected   false})))
 
 (defn fetch-data
-  ;; TODO review this big function
+  ;; [TODO] review this big function
   [{:keys [settings force-refresh? success failure]
     :or   {force-refresh? false}}]
   (-> (p/let [{cache-data :data cache-date :started-at} (cache/read cache-key)
