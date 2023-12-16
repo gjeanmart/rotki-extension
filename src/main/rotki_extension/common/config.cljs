@@ -62,7 +62,7 @@
                                                       :setting/form:endpoint:tooltip           "The URL of your Rotki backend."
                                                       :setting/form:snapshot-ttl               "Snapshot TTL (minutes)"
                                                       :setting/form:snapshot-ttl:tooltip       "How long to keep data in cache before invalidating it."
-                                                      :setting/form:timeout                    "Rotki server timeout (minutes)"
+                                                      :setting/form:timeout                    "Rotki server timeout (seconds)"
                                                       :setting/form:timeout:tooltip            "How long to wait for a response from the server."
                                                       :setting/form:background-refresh         "Background refresh (minutes)"
                                                       :setting/form:background-refresh:tooltip "How often to refresh the data in the background."
@@ -76,7 +76,6 @@
                  ;; Theme (Daisy UI)
                  :theme            {:light "light"
                                     :dark  "dark"}}
-
    ;; Override common config when env=development
    :development {:default-settings {:rotki-endpoint         "http://localhost:4242"
                                     :rotki-timeout-sec      60
