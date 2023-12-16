@@ -33,6 +33,7 @@
       ;; ------ SETTINGS ------
       :set-settings
       (-> (p/chain (chrome-extension/storage-set :settings data)
+                   #(cache/remove rotki/cache-key)
                    #(success data))
           (p/catch #(failure %)))
 
@@ -81,10 +82,10 @@
              #(rotki/fetch-data {:settings       %
                                  :force-refresh? true
                                  :success        identity
-                                 :failure        (fn [err] (log/error "Error fetching data" err))}))
+                                 :failure        (fn [err] (log/warning "Error fetching data" err))}))
 
       ;; ------ DEFAULT ------
-    (log/error (str "No handler found for alarm " alarm-name))))
+    (log/warning (str "No handler found for alarm " alarm-name))))
 
 (defn init []
   (p/let [_ (chrome-extension/on-install    #(on-install %1))

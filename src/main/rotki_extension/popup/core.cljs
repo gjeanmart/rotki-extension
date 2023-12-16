@@ -1,10 +1,11 @@
 (ns rotki-extension.popup.core
-  (:require [reagent.dom.client :as rdom]
+  (:require [promesa.core :as p]
             [re-frame.core :as rf]
-            [rotki-extension.common.chrome-extension] 
+            [reagent.dom.client :as rdom]
+            [rotki-extension.common.chrome-extension :as chrome-extension]
             [rotki-extension.common.config :as config]
-            [rotki-extension.popup.utils.tracking]
-            [rotki-extension.popup.layout :as layout]))
+            [rotki-extension.popup.layout :as layout]
+            [rotki-extension.popup.utils.tracking]))
 
 (defonce root (rdom/create-root (js/document.getElementById "root")))
 
@@ -71,3 +72,14 @@
  :db/set
  (fn [db [_ & args]]
    (assoc-in db (butlast args) (last args))))
+
+
+(rf/reg-fx
+ :chrome-extension/runtime:send-message
+ (fn [{:keys [action data on-success on-failure]
+       :or   {on-failure [:track/error]}}]
+   (-> (p/chain (chrome-extension/send-message {:action action :data data})
+                #(if (= :success (-> % :status keyword))
+                   (rf/dispatch (conj on-success (:data %)))
+                   (rf/dispatch (conj on-failure (:data %)))))
+       (p/catch #(rf/dispatch (conj on-failure %))))))

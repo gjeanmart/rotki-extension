@@ -1,0 +1,58 @@
+{
+  "result": {
+    "assets": {
+      "ETH": {
+        "amount": "2.5",
+        "usd_value": "585.525",
+        "percentage_of_net_value": "46.8268%"
+      },
+      "BTC": {
+        "amount": "0.05",
+        "usd_value": "2115.039",
+        "percentage_of_net_value": "2.0949%"
+      },
+      "BCH": {
+        "amount": "3",
+        "usd_value": "702.1500000000001",
+        "percentage_of_net_value": "0.0000%"
+      },
+      "eip155:1/erc20:0x6B175474E89094C44Da98b954EedeAC495271d0F": {
+        "amount": "4000",
+        "usd_value": "4000",
+        "percentage_of_net_value": "6.5954%"
+      },
+      "eip155:1/erc20:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48": {
+        "amount": "5000",
+        "usd_value": "5000",
+        "percentage_of_net_value": "7.8492%"
+      },
+      "eip155:1/erc20:0x0D8775F648430679A709E98d2b0Cb6250d2887EF": {
+        "amount": "350",
+        "usd_value": "82.1268",
+        "percentage_of_net_value": "0.0061%"
+      },
+      "NEAR": {
+        "amount": "233",
+        "usd_value": "100",
+        "percentage_of_net_value": "3.7361%"
+      }
+    },
+    "liabilities": {},
+    "location": {
+      "kraken": {
+        "usd_value": "0",
+        "percentage_of_net_value": "0%"
+      },
+      "blockchain": {
+        "usd_value": "12584.75",
+        "percentage_of_net_value": "100%"
+      },
+      "external": {
+        "usd_value": "0",
+        "percentage_of_net_value": "0%"
+      }
+    },
+    "net_usd": "12584.75"
+  },
+  "message": ""
+}

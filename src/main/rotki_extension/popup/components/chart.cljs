@@ -32,7 +32,7 @@
                               :rotation            -90,
                               :circumference       180}
                     :plugins [{:id               "innerLabel",
-                               :afterDatasetDraw (fn [chart args _pluginOptions]
+                               :afterDatasetDraw (fn [^js chart ^js args _pluginOptions]
                                                    (let [x (-> args .-meta .-data (aget 0) .-x)
                                                          y (-> args .-meta .-data (aget 0) .-y)]
                                                      (.. chart -ctx (save))

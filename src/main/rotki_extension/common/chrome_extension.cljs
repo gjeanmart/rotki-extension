@@ -1,7 +1,6 @@
 (ns rotki-extension.common.chrome-extension
   (:require [rotki-extension.common.utils :as ut]
-            [promesa.core :as p]
-            [re-frame.core :as rf]))
+            [promesa.core :as p]))
 
 ;; ---- RUNTIME ----
 
@@ -42,16 +41,6 @@
                       ;; return true to indicate that sendResponse 
                       ;; will be called asynchronously
                      true))))
-
-(rf/reg-fx
- :chrome-extension/runtime:send-message
- (fn [{:keys [action data on-success on-failure]
-       :or   {on-failure [:track/error]}}]
-   (-> (p/chain (send-message {:action action :data data})
-                #(if (= :success (-> % :status keyword))
-                   (rf/dispatch (conj on-success (:data %)))
-                   (rf/dispatch (conj on-failure (:data %)))))
-       (p/catch #(rf/dispatch (conj on-failure %))))))
 
 ;; ---- STORAGE ----
 

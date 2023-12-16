@@ -51,12 +51,15 @@ dev:
 release:
 # TODO check if jq is installed
 # TODO add version as argument and update package.json and build/manifest.json
+# TODO make environment (develpment, production) as argument
 	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	@echo Creating release v.$(PACKAGE_VERSION)
 	make install
-	make css/release
 	make cljs/release
+## This is trick to prevent "Uncaught SyntaxError: The requested module './shared.js' does not provide an export named '$jscomp'"	
+	echo 'export var $$jscomp=$$jscomp;' >> build/js/shared.js
+	make css/release
+	mkdir -p ../dist/
 	cd build ; \
-		mkdir -p ../dist/ ; \
 		zip -r ../dist/rotki-extension-v$(PACKAGE_VERSION).zip * ; \
 		cd ..

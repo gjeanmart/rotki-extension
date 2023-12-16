@@ -1,6 +1,7 @@
 (ns rotki-extension.popup.pages.settings.view
   (:require [re-frame.core :as rf]
             [reagent.core :as r]
+            [rotki-extension.common.config :as config]
             [rotki-extension.popup.components.button :as button]
             [rotki-extension.popup.components.checkbox :as checkbox]
             [rotki-extension.popup.components.icons :as icons]
@@ -52,6 +53,12 @@
                      :type      :checkbox
                      :on-change #(update-field :hide-zero-balances (not (:hide-zero-balances @data)))}]
 
+     (when (config/dev?)
+       [checkbox/base {:label     (tr [:setting/form:use-mocked-data?])
+                       :value     (:use-mocked-data? @data)
+                       :checked?  (:use-mocked-data? @data)
+                       :type      :checkbox
+                       :on-change #(update-field :use-mocked-data? (not (:use-mocked-data? @data)))}])
      ;; Hide theme for now
     ;;  [checkbox/base {:label     (tr [:setting/form:theme])
     ;;                  :value     (:theme @data)
