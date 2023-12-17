@@ -1,16 +1,17 @@
 (ns rotki-extension.units-tests.common.date-test
-  (:require [cljs.test :refer-macros [deftest is testing]]
+  (:require ["date-fns" :as date-fns]
+            [cljs.test :refer-macros [deftest is testing]]
             [rotki-extension.common.date :as date]
-            ["date-fns" :as date-fns]))
+            [rotki-extension.test-helpers :as h]))
 
-(defonce mock-date (js/Date. "2023-01-01T00:00:00.000") )
-(defonce mock-date-epoch (date-fns/getUnixTime mock-date) )
+(def mock-date (js/Date. "2023-01-01T00:00:00.000"))
+(def mock-date-epoch (date-fns/getUnixTime mock-date))
 
 ;; ================= TESTS =================
 
 (deftest test-date-now
   (testing "test date/now"
-    (with-redefs [js/Date (fn [] mock-date)]
+    (h/with-mock-date mock-date
       (is (= (date/now) mock-date-epoch)))))
 
 (deftest test-date-format

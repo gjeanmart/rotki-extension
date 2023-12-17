@@ -86,11 +86,11 @@
                                     :hide-zero-balances     true}}
 
    ;; Override common config when env=test
-      :test        {:default-settings {:rotki-endpoint         "http://localhost:4242"
+      :test        {:default-settings {:rotki-endpoint         "http://localhost:42420"
                                        :rotki-timeout-sec      60
                                        :rotki-snapshot-ttl-min 5
                                        :rotki-refresh-data-min 1
-                                       :use-mocked-data?       true
+                                       :use-mocked-data?       false
                                        :theme                  "light"
                                        :hide-zero-balances     true}}
 

@@ -13,6 +13,10 @@
 
 ;; ---- URL ----
  
+(defn get-url-path 
+  [url]
+   (.. (js/URL. url) -pathname))
+
  (defn ->query-params
    [options]
    (.. (js/URLSearchParams. (c->j options))

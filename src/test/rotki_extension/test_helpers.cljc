@@ -1,6 +1,7 @@
 (ns rotki-extension.test-helpers
   #?(:cljs (:require ["nock" :as nock]
                      ["cross-fetch/polyfill" :as fetch]
+                     ["timekeeper" :as timekeeper]
                      [rotki-extension.common.utils :as ut]
                      [promesa.core :as p]))
   #?(:cljs (:require-macros [rotki-extension.test-helpers]))
@@ -8,28 +9,23 @@
                     [promesa.core :as p])))
 
 #?(:cljs
-   (do
+   (do 
+     (def fetch' fetch) 
+     (def timekeeper' timekeeper)
+
      (defn stub-http
-       [base-url {:keys [action path status match-body body query]
-                  :or   {match-body any?
-                         action     :get
-                         status     200}}]
-       (let [wrapped-match-body (comp match-body ut/j->c)]
-         (cond-> (nock base-url)
-           (= :get action)    (.get path wrapped-match-body)
-           (= :post action)   (.post path wrapped-match-body)
-           (= :patch action)  (.patch path wrapped-match-body)
-           (= :delete action) (.delete path wrapped-match-body)
-           query              (.query (clj->js query))
-           :then              (.reply status (clj->js body)))))
+       [base-url {:keys [method path status body query]}]
+       (cond-> (nock base-url)
+         (= :get method)    (.get path)
+         (= :post method)   (.post path)
+         (= :patch method)  (.patch path)
+         (= :delete method) (.delete path)
+         query              (.query (clj->js query))
+         :then              (.reply status (ut/clj->json body))))
 
      (defn clean-all-stubs
        []
        (.cleanAll nock))
-     
-     (defn load-fetch 
-       []
-       fetch)
      
      (defn mock-js-chrome
        [in-memory-storage]
@@ -41,8 +37,12 @@
                                                         (select-keys @in-memory-storage)
                                                         ut/c->j
                                                         p/resolved))
-                                   :set (fn [obj] (swap! in-memory-storage merge (ut/j->c obj))
-                                          (p/resolved true))}}}))))
+                                   :set (fn [obj]
+                                          (swap! in-memory-storage merge (ut/j->c obj))
+                                          (p/resolved true))
+                                   :clear (fn []
+                                            (reset! in-memory-storage {})
+                                            (p/resolved true))}}}))))
 
 #?(:clj
    (do
@@ -53,20 +53,27 @@
                       (-> (p/do! ~@body)
                           (p/catch (fn [error#]
                                      (test/is (nil? error#))))
-                          (p/finally done#)))))
+                          (p/finally done#))))) 
      
-     (defmacro with-stub-http
-       [{:keys [url path body action status] :or {path "/" action :get status 200 }} 
-        & body']
-       `(with-redefs [js/fetch (load-fetch)]
-          (stub-http ~url {:action ~action
-                           :path   ~path
-                           :status ~status
-                           :body   ~body})
-          ~@body'))
-
+     (defmacro with-http-stubs
+       [stubs & body]
+       `(with-redefs [js/fetch fetch']
+          (doall
+           (for [stub# ~stubs]
+             (stub-http (:url stub#) {:method (get stub# :method :get)
+                                      :path   (get stub# :path "/")
+                                      :status (get stub# :status 200)
+                                      :query  (get stub# :query {})
+                                      :body   (get stub# :body {})})))
+          ~@body))
+     
      (defmacro with-mock-js-chrome
        [storage & body]
-       `(do (set! js/chrome (fn []))
-            (with-redefs [js/chrome (mock-js-chrome ~storage)]
-              ~@body)))))
+       `(do (set! js/chrome (mock-js-chrome ~storage))
+            ~@body))
+
+     (defmacro with-mock-date
+       [date & body]
+       `(p/do! (-> timekeeper' (.freeze ~date))
+               ~@body
+               (-> timekeeper' (.reset))))))

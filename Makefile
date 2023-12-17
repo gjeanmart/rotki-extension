@@ -2,7 +2,7 @@
 # === GENERAL ===
 
 clean:
-	rm -rf build/{css,js}/*
+	rm -rf build/{css,js}/* build-test/*
 
 hard-refresh:
 	rm -rf ./.shadow-cljs ./node_modules
@@ -40,7 +40,7 @@ css/release:
 
 test: 
 	make install
-	npx shadow-cljs compile test
+	npx shadow-cljs compile unit-test
 
 # === ALL ===
 

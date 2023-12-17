@@ -33,7 +33,7 @@
 
 ;; ================= TESTS - STORAGE =================
 
-(h/deftest-async test-storage-set-singke-key
+(h/deftest-async test-storage-set-single-key
   (testing "chrome-extension/storage-set (single key)"
     (h/with-mock-js-chrome in-memory-storage
       (p/chain (chrome-extension/storage-set :foo "bar")
@@ -64,3 +64,10 @@
     (h/with-mock-js-chrome in-memory-storage
       (p/chain (chrome-extension/storage-get :foo)
                #(is (nil? %))))))
+
+(h/deftest-async test-storage-set-single-key-and-read-it
+  (testing "chrome-extension/storage-set (single key) and chrome-extension/storage-get"
+    (h/with-mock-js-chrome in-memory-storage
+      (p/chain (chrome-extension/storage-set :foo "bar")
+               #(chrome-extension/storage-get :foo)
+               #(is (= % "bar"))))))

@@ -12,12 +12,13 @@
 
 ;; ------ MOCKED DATA ------
 
-(defn- mock-request
-  [url]
-  (condp = (.. (js/URL. url) -pathname)
+(defn mock-request
+  [path]
+  (condp = path
     "/api/1/ping"            (ut/json->clj (rc/inline "./mock/api_1_ping-response.json"))
     "/api/1/balances"        (ut/json->clj (rc/inline "./mock/api_1_balances-response.json"))
-    "/api/1/assets/mappings" (ut/json->clj (rc/inline "./mock/api_1_assets_mappings-response.json"))))
+    "/api/1/assets/mappings" (ut/json->clj (rc/inline "./mock/api_1_assets_mappings-response.json"))
+    (throw (ex-info "No mock found" {:path path}))))
 
 ;; ------ ROTKI API ------
 
@@ -36,7 +37,7 @@
 (defn- execute 
   [{:keys [settings request method]}]
   (if (:use-mocked-data? settings)
-    (mock-request (:url request))
+    (-> request :url ut/get-url-path mock-request ut/json->clj)
     (condp = method
       :get  (http/get request)
       :post (http/post request))))
@@ -98,7 +99,7 @@
 
 ;; ;; ------- ROTKI FN -------
 
-(defn fetch-data-make-response
+(defn- fetch-data-make-response
   [{:keys [settings net_usd assets assets-identifiers-mappings]}]
   {:total-balance net_usd
    :assets        (->> (:assets assets-identifiers-mappings)
@@ -113,7 +114,7 @@
                        ;; transform as sorted map
                        (reduce #(assoc %1 (:id %2) %2) (sorted-map)))})
 
-(defn fetch-data-error 
+(defn- fetch-data-error 
   [error success _failure]
   (log/warning "Error while fetching data from rotki: " error)
   (p/let [{cache-data :data

@@ -15,6 +15,11 @@
 
 ;; ================= TESTS - URL =================
 
+(deftest test-get-url-path
+  (testing "test get-url-path"
+    (is (= (utils/get-url-path "http://example.com/foo/bar")
+           "/foo/bar"))))
+
 (deftest test->query-params
   (testing "test ->query-params"
     (is (= (utils/->query-params {:a 1 :b "str" :c true})

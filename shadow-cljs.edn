@@ -20,9 +20,9 @@
                                                    :web-worker true}
                                           :popup  {:init-fn    rotki-extension.popup.core/init
                                                    :depends-on #{:shared}}}}
-           :test      {:target           :node-test
-                       :output-to        "build-test/test.js"
-                       :closure-defines  {rotki-extension.common.config/env "test"}
-                       :compiler-options {:infer-externs :auto}
-                       :ns-regexp        "-test$"
-                       :autorun          true}}}
+           :unit-test      {:target           :node-test
+                            :output-to        "build-test/test.js"
+                            :closure-defines  {rotki-extension.common.config/env "test"}
+                            :compiler-options {:infer-externs :auto}
+                            :ns-regexp        "-test$"
+                            :autorun          true}}}
