@@ -98,4 +98,4 @@
                    #(do (is (= (-> @in-memory-storage :cache_rotki-data :started-at) mock-date-epoch))
                         (is (= (-> @in-memory-storage :cache_rotki-data :ttl)
                                (-> default-settings :rotki-snapshot-ttl-min (* 60))))
-                        (is (= (-> @in-memory-storage :cache_rotki-data :data :total-balance) "12584.75")))))))))
+                        (is (= (-> @in-memory-storage :cache_rotki-data :data :total-balance) "12584.75CC")))))))))
