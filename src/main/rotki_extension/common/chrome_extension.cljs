@@ -53,7 +53,7 @@
                (map #(-> results ut/j->c (get (-> % name keyword))) keys)))))
 
 (defn storage-set
-  ;;TODO: review this to work with infinite key-values like assoc
+  ;;[TODO]: review this to work with infinite key-values like assoc
   ([k1 v1]
    (.. js/chrome -storage -local (set (ut/c->j {k1 v1}))))
   ([k1 v1 k2 v2]

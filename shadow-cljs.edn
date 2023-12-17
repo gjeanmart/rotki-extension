@@ -8,15 +8,21 @@
                 ;; i18n
                 [com.taoensso/tempura "1.5.3"]]
 
- :builds  {:extension  {:target           :esm
-                        :output-dir       "build/js"
-                        :runtime          :custom
-                        :dev              {:closure-defines {rotki-extension.common.config/env "development"}}
-                        :release          {:closure-defines {rotki-extension.common.config/env "production"}}
-                        :compiler-options {:infer-externs      :auto}
-                        :modules          {:shared {:entries []}
-                                           :sw     {:init-fn    rotki-extension.sw.core/init
-                                                    :depends-on #{:shared}
-                                                    :web-worker true}
-                                           :popup  {:init-fn    rotki-extension.popup.core/init
-                                                    :depends-on #{:shared}}}}}}
+ :builds  {:extension {:target           :esm
+                       :output-dir       "build/js"
+                       :runtime          :custom
+                       :dev              {:closure-defines {rotki-extension.common.config/env "development"}}
+                       :release          {:closure-defines {rotki-extension.common.config/env "production"}}
+                       :compiler-options {:infer-externs :auto}
+                       :modules          {:shared {:entries []}
+                                          :sw     {:init-fn    rotki-extension.sw.core/init
+                                                   :depends-on #{:shared}
+                                                   :web-worker true}
+                                          :popup  {:init-fn    rotki-extension.popup.core/init
+                                                   :depends-on #{:shared}}}}
+           :unit-test      {:target           :node-test
+                            :output-to        "build-test/unit-test.js"
+                            :closure-defines  {rotki-extension.common.config/env "test"}
+                            :compiler-options {:infer-externs :auto}
+                            :ns-regexp        "-test$"
+                            :autorun          false}}}

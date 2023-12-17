@@ -52,6 +52,9 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 - Enable "Developer mode" (top-right corner)
 - Click on "Load unpacked" and select the folder `build`
 
+### Tests
+
+- Run `$ make test`
 
 ### Release on Chrome store
 

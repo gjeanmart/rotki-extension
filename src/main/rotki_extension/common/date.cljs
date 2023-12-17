@@ -5,7 +5,7 @@
 
 (defn now
   []
-  (-> (new js/Date)
+  (-> (js/Date.)
       date-fns/getUnixTime))
 
 (defn format
