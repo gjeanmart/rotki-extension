@@ -41,6 +41,7 @@ css/release:
 test: 
 	make install
 	npx shadow-cljs compile unit-test
+	node ./build-test/unit-test.js
 
 # === ALL ===
 

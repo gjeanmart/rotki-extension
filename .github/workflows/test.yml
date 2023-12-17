@@ -15,8 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@master
         with:
-          # Defaults to the reference of the GitHub event that triggered the
-          # workflow.
           ref: "${{ github.event.inputs.deploy_ref }}"
 
       - name: Install Node.js
