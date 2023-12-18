@@ -14,10 +14,12 @@ install:
 # === CLJS ===
 
 cljs/watch:
-	npx shadow-cljs watch extension
+	npx shadow-cljs watch extension \
+		--config-merge '{:closure-defines {rotki-extension.common.config/version "$(VERSION)"}}'
 
 cljs/release:
-	npx shadow-cljs release extension
+	npx shadow-cljs release extension\
+		--config-merge '{:closure-defines {rotki-extension.common.config/version "$(VERSION)"}}'
 
 
 # === CSS ===
@@ -46,6 +48,7 @@ test:
 # === ALL ===
 
 dev:
+	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	make install
 	npx concurrently \
 		--kill-others \
@@ -54,7 +57,7 @@ dev:
 		--prefix-colors    "bgBlue.bold,bgMagenta.bold" \
 		--names             "css,cljs" \
 		"make css/watch" \
-		"make cljs/watch"
+		"make cljs/watch VERSION=$(PACKAGE_VERSION)"
 
 release:
 # [TODO] check if jq is installed
@@ -63,7 +66,7 @@ release:
 	$(eval PACKAGE_VERSION := $(shell cat ./package.json | jq -r '.version'))
 	@echo Creating release v.$(PACKAGE_VERSION)
 	make install
-	make cljs/release
+	make cljs/release VERSION=$(PACKAGE_VERSION)
 ## This is trick to prevent "Uncaught SyntaxError: The requested module './shared.js' does not provide an export named '$jscomp'"	
 	echo 'export var $$jscomp=$$jscomp;' >> build/js/shared.js
 	make css/release

@@ -1,5 +1,13 @@
 (ns rotki-extension.common.config)
 
+;; --- Version
+
+(goog-define version "0.0.0")
+
+(defn get-version 
+  []
+  version)
+
 ;; --- Environment
 
 (goog-define env "development")

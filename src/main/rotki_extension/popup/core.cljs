@@ -19,11 +19,12 @@
 
 (rf/reg-event-fx
  :core/boot
- (fn []
+ (fn [_ [_ {:keys [force-refresh?]}]]
    {:db (config/read :init-db)
     :fx [[:chrome-extension/runtime:send-message {:action     :get-settings
                                                   :on-success [:db/set :root/settings]}]
          [:chrome-extension/runtime:send-message {:action     :get-rotki-data
+                                                  :data       {:force-refresh force-refresh?}
                                                   :on-success [:core/boot:success]}]]}))
 
 (rf/reg-event-fx

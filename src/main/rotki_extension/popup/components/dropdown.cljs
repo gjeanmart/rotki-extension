@@ -5,18 +5,18 @@
 (def default-classes [])
 
 (defn base 
-  [{:keys [options tabindex] :as opts} & children]
+  [{:keys [options tabindex]} & [children]]
   (r/with-let [opened? (r/atom false)]
     [:div.dropdown.dropdown-bottom.dropdown-end
      {:class (ut/classes->string [(when @opened? "dropdown-open")]) }
-     [:label.btn.btn-circle {:tabindex 0
+     [:label.btn.btn-circle {:tabIndex 0
                              :role     "button"
                              :on-click #(reset! opened? (not @opened?))}
       children]
      [:ul.dropdown-content.menu.shadow.bg-base-100.rounded-box.border-2.divide-y.divide-slate-200
       {:class (ut/classes->string ["z-[1]"
                                    (when-not @opened? "hidden")])
-       :tabindex tabindex}
+       :tabIndex tabindex}
       (for [option-id (range (count options))
             :let [option (get options option-id)]]
         ^{:key (str "dropdown-" option-id)}

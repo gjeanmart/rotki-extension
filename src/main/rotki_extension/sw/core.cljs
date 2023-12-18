@@ -33,8 +33,6 @@
       ;; ------ SETTINGS ------
       :set-settings
       (-> (p/chain (chrome-extension/storage-set :settings data)
-                   ;; Remove cache when settings change
-                   #(cache/remove rotki/cache-key)
                    #(success data))
           (p/catch #(failure %)))
 
@@ -67,9 +65,10 @@
       ;; ------ ROTKI ------
       :get-rotki-data
       (p/chain  (chrome-extension/storage-get :settings)
-                #(rotki/fetch-data {:settings %
-                                    :success  success
-                                    :failure  failure}))
+                #(rotki/fetch-data (cond-> {:settings       %
+                                            :success        success
+                                            :failure        failure}
+                                     (:force-refresh data) (assoc :force-refresh? true))))
 
       ;; ------ DEFAULT ------
       (failure (str "No handler for action " action)))))
