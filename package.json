@@ -1,7 +1,6 @@
 {
   "name": "rotki-extension",
   "version": "0.1.0",
-  "packageManager": "^yarn@1.22.19",
   "devDependencies": {
     "concurrently": "8.2.2",
     "cross-fetch": "4.0.0",
