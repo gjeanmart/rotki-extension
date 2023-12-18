@@ -10,6 +10,7 @@
                                              Question
                                              SignIn
                                              SignOut
+                                             Stamp
                                              Sun
                                              User
                                              Wallet
@@ -90,6 +91,11 @@
 (defn question
   [opts]
   [base Question opts])
+
+(defn stamp
+  [opts]
+  [base Stamp opts])
+
 
 
 

@@ -37,7 +37,7 @@
 (defn- execute 
   [{:keys [settings request method]}]
   (if (:use-mocked-data? settings)
-    (-> request :url ut/get-url-path mock-request ut/json->clj)
+    (-> request :url ut/get-url-path mock-request)
     (condp = method
       :get  (http/get request)
       :post (http/post request))))
