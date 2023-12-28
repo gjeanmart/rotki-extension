@@ -19,3 +19,9 @@
     (is (= (date/format mock-date-epoch) "2023-01-01 00:00"))
     (is (= (date/format mock-date-epoch "yyyy-MM-dd HH:mm:ss") "2023-01-01 00:00:00"))
     (is (= (date/format mock-date-epoch "yyyy-MM-dd") "2023-01-01"))))
+
+(deftest test-move
+  (testing "test date/move"
+    (h/with-mock-date mock-date
+      (is (= (date/move (date/now) {:days 1}) 
+             (+ mock-date-epoch (* 24 60 60)))))))

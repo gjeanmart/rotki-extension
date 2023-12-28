@@ -83,15 +83,27 @@
                                  :force-refresh? true
                                  :success        identity
                                  :failure        (fn [err] (log/warning "Error fetching data" err))}))
+    :get-portfolio-trend
+    (p/chain (chrome-extension/storage-get :settings)
+             #(rotki/get-trend {:settings %
+                                :success  (fn [result]
+                                            (chrome-extension/set-icon (str "/img/rotki-" (name result)) ".png"))
+                                :failure  (fn [err] 
+                                            (log/warning "Error fetching trend" err)
+                                            (chrome-extension/set-icon (str "/img/rotki") ".png"))}))
 
       ;; ------ DEFAULT ------
     (log/warning (str "No handler found for alarm " alarm-name))))
 
 (defn init []
-  (p/let [_ (chrome-extension/on-install    #(on-install %1))
-          _ (chrome-extension/on-message    #(on-message-received %1 %2 %3))
-          _ (chrome-extension/alarm-on-tick #(on-alarm-tick %1))
-          _ (chrome-extension/alarm-create  {:alarm-name :get-rotki-data
-                                             :delay-min  1
-                                             :period-min (config/read :default-settings :rotki-refresh-data-min)})]))
+  (p/do! (chrome-extension/on-install    #(on-install %1))
+         (chrome-extension/on-message    #(on-message-received %1 %2 %3))
+         (chrome-extension/alarm-on-tick #(on-alarm-tick %1))
+         (p/chain (chrome-extension/storage-get :settings)
+                  #(p/do! (chrome-extension/alarm-create  {:alarm-name :get-rotki-data
+                                                           :delay-min  1
+                                                           :period-min (-> % :rotki-refresh-data-min js/parseInt)})
+                          (chrome-extension/alarm-create  {:alarm-name :get-portfolio-trend
+                                                           :delay-min  1
+                                                           :period-min (-> % :rotki-refresh-data-min js/parseInt)})))))
 

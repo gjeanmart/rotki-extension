@@ -4,7 +4,8 @@
             [rotki-extension.common.utils :as ut]
             [rotki-extension.sw.cache :as cache]
             [rotki-extension.sw.log :as log]
-            [shadow.resource :as rc]))
+            [shadow.resource :as rc]
+            [rotki-extension.common.date :as date]))
 
 ;; ------ CONSTANT ------
 
@@ -15,9 +16,10 @@
 (defn mock-request
   [path]
   (condp = path
-    "/api/1/ping"            (ut/json->clj (rc/inline "./mock/api_1_ping-response.json"))
-    "/api/1/balances"        (ut/json->clj (rc/inline "./mock/api_1_balances-response.json"))
-    "/api/1/assets/mappings" (ut/json->clj (rc/inline "./mock/api_1_assets_mappings-response.json"))
+    "/api/1/ping"                (ut/json->clj (rc/inline "./mock/api_1_ping-response.json"))
+    "/api/1/balances"            (ut/json->clj (rc/inline "./mock/api_1_balances-response.json"))
+    "/api/1/assets/mappings"     (ut/json->clj (rc/inline "./mock/api_1_assets_mappings-response.json"))
+    "/api/1/statistics/netvalue" (ut/json->clj (rc/inline "./mock/api_1_statistics-netvalue-response.json"))
     (throw (ex-info "No mock found" {:path path}))))
 
 ;; ------ ROTKI API ------
@@ -87,6 +89,14 @@
                  handle-response)
         (p/catch handle-error))))
 
+(defn statistics-netvalue
+  "See https://rotki.readthedocs.io/en/latest/api.html#statistics-for-netvalue-over-time"
+  [settings]
+  (-> (p/chain (make-request settings  "/statistics/netvalue")
+               #(execute {:settings settings :method :get :request %})
+               handle-response)
+      (p/catch handle-error)))
+
 (defn get-asset-logo
   "See https://rotki.readthedocs.io/en/stable/api.html#get--api-(version)-assets-icon"
   [settings {:keys [id image_url]}]
@@ -154,3 +164,21 @@
                           :connected   true})))
             (p/catch #(fetch-data-error % success failure))))
       (p/catch #(fetch-data-error % success failure))))
+
+(defn get-trend 
+  [{:keys [settings success failure]}]
+  (-> (p/let [nb-days              7 ;; [TODO] make this configurable
+              trend-date           (date/move (date/now) {:days (- nb-days)})
+              {:keys [times data]} (statistics-netvalue settings)
+              closest-time         (reduce (fn [prev curr]
+                                             (if (< (Math/abs (- curr trend-date)) (Math/abs (- prev trend-date)))
+                                               curr
+                                               prev)) 0 times)
+              closest-time-index   (->> times
+                                        (map-indexed vector)
+                                        (filter #(= (second %) closest-time))
+                                        (ffirst))
+              prev-value           (nth data closest-time-index)
+              last-value           (last data)]
+        (success (if (> last-value prev-value) :up :down)))
+      (p/catch #(failure %))))
