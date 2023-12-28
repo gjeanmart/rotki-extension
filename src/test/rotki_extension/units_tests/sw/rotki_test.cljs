@@ -51,6 +51,15 @@
                     (is (= (-> % :assets :BTC :symbol) "BTC"))
                     (is (= (-> % :assets :erc20:0x6B175474E89094C44Da98b954EedeAC495271d0F :symbol) "DAI")))))))
 
+(h/deftest-async test-rotki-api-statistics-netvalue
+  (testing "test rotki/statistics-netvalue"
+    (h/with-http-stubs [{:url    (:rotki-endpoint default-settings)
+                         :path   "/api/1/statistics/netvalue"
+                         :body   (rotki/mock-request "/api/1/statistics/netvalue")}]
+      (p/chain (rotki/statistics-netvalue default-settings)
+               #(do (is (= (count (:times %)) 4))
+                    (is (= (count (:data %)) 4)))))))
+
 (deftest test-get-asset-logo
   (testing "Test rotki/get-asset-logo"
     (is (= (rotki/get-asset-logo default-settings {:id "ETH"})
@@ -112,3 +121,24 @@
 
 ;; [TODO]
 ;; - test with cache enabled
+
+(h/deftest-async test-rotki-get-trend
+  (testing "test rotki/get-trend"
+    (h/with-mock-date mock-date
+      (h/with-http-stubs [{:url  (:rotki-endpoint default-settings)
+                           :path "/api/1/statistics/netvalue"
+                           :body (rotki/mock-request "/api/1/statistics/netvalue")}]
+        (p/chain (p/create (fn [resolve reject]
+                             (rotki/get-trend {:settings default-settings
+                                               :success  #(resolve %)
+                                               :failure  #(reject %)})))
+                 #(do (is (= :up %))))))))
+
+(h/deftest-async test-rotki-get-trend-not-connected
+  (testing "test rotki/get-trend-not-connected"
+    (h/with-mock-date mock-date
+      (p/chain (p/create (fn [resolve reject]
+                           (rotki/get-trend {:settings default-settings
+                                             :success  #(reject %)
+                                             :failure  #(resolve %)})))
+               #(do (is (= "Server not responding" %)))))))

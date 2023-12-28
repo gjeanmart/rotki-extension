@@ -97,8 +97,13 @@
                                    keyword))))))
 
 
-;; ---- BADGE ----
+;; ---- ACTIONS ----
 
 (defn badge-set
   [txt]
   (.. js/chrome -action (setBadgeText (ut/c->j {:text txt}))))
+
+(defn set-icon
+  [path extension]
+  (.. js/chrome -action (setIcon (ut/c->j {:path {"32" (str path "-32" extension)
+                                                  "16" (str path "-16" extension)}}))))
