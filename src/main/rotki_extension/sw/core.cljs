@@ -99,10 +99,11 @@
   (p/do! (chrome-extension/on-install    #(on-install %1))
          (chrome-extension/on-message    #(on-message-received %1 %2 %3))
          (chrome-extension/alarm-on-tick #(on-alarm-tick %1))
-         (chrome-extension/alarm-create  {:alarm-name :get-rotki-data
-                                          :delay-min  1
-                                          :period-min (config/read :default-settings :rotki-refresh-data-min)})
-         (chrome-extension/alarm-create  {:alarm-name :get-portfolio-trend
-                                          :delay-min  1
-                                          :period-min (config/read :default-settings :rotki-refresh-data-min)})))
+         (p/chain (chrome-extension/storage-get :settings)
+                  #(p/do! (chrome-extension/alarm-create  {:alarm-name :get-rotki-data
+                                                           :delay-min  1
+                                                           :period-min (-> % :rotki-refresh-data-min js/parseInt)})
+                          (chrome-extension/alarm-create  {:alarm-name :get-portfolio-trend
+                                                           :delay-min  1
+                                                           :period-min (-> % :rotki-refresh-data-min js/parseInt)})))))
 
