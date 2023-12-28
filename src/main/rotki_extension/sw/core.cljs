@@ -103,6 +103,6 @@
                                           :delay-min  1
                                           :period-min (config/read :default-settings :rotki-refresh-data-min)})
          (chrome-extension/alarm-create  {:alarm-name :get-portfolio-trend
-                                          :delay-min  0 ;;1
+                                          :delay-min  1
                                           :period-min (config/read :default-settings :rotki-refresh-data-min)})))
 
