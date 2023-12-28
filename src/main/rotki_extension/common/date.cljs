@@ -12,7 +12,8 @@
 
 (defn move
   "Move date by duration {:years 1 :months 1 :days 1 :hours 1 :minutes 1 :seconds 1}
-   Use positive number to add and negative numbers to subtract"
+   Use positive number to add and negative numbers to subtract
+   See https://date-fns.org/v3.0.6/docs/add for more details"
   [date duration]
   (-> date
       date-fns/fromUnixTime
