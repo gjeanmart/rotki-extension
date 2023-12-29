@@ -1,7 +1,6 @@
 (ns rotki-extension.common.chrome-extension
   (:require [rotki-extension.common.utils :as ut]
-            [promesa.core :as p]
-            [re-frame.core :as rf]))
+            [promesa.core :as p]))
 
 ;; ---- RUNTIME ----
 
@@ -43,16 +42,6 @@
                       ;; will be called asynchronously
                      true))))
 
-(rf/reg-fx
- :chrome-extension/runtime:send-message
- (fn [{:keys [action data on-success on-failure]
-       :or   {on-failure [:track/error]}}]
-   (-> (p/chain (send-message {:action action :data data})
-                #(if (= :success (-> % :status keyword))
-                   (rf/dispatch (conj on-success (:data %)))
-                   (rf/dispatch (conj on-failure (:data %)))))
-       (p/catch #(rf/dispatch (conj on-failure %))))))
-
 ;; ---- STORAGE ----
 
 (defn storage-get
@@ -64,7 +53,7 @@
                (map #(-> results ut/j->c (get (-> % name keyword))) keys)))))
 
 (defn storage-set
-  ;;TODO: review this to work with infinite key-values like assoc
+  ;;[TODO]: review this to work with infinite key-values like assoc
   ([k1 v1]
    (.. js/chrome -storage -local (set (ut/c->j {k1 v1}))))
   ([k1 v1 k2 v2]
@@ -108,8 +97,13 @@
                                    keyword))))))
 
 
-;; ---- BADGE ----
+;; ---- ACTIONS ----
 
 (defn badge-set
   [txt]
   (.. js/chrome -action (setBadgeText (ut/c->j {:text txt}))))
+
+(defn set-icon
+  [path extension]
+  (.. js/chrome -action (setIcon (ut/c->j {:path {"32" (str path "-32" extension)
+                                                  "16" (str path "-16" extension)}}))))

@@ -3,6 +3,8 @@
   (:require [rotki-extension.common.utils :as ut]
             [promesa.core :as p]))
 
+
+
 (def default-timeout 10000)
 
 (defn- base
@@ -27,7 +29,7 @@
                                 #(resolve %))
                  :blob (p/chain (.. response (blob))
                                 (fn [blob]
-                                  (let [reader (new js/FileReader)]
+                                  (let [reader (js/FileReader.)]
                                     (set! (.. reader -onloadend) #(resolve (.. reader -result))) 
                                     (.. reader (readAsDataURL blob))))))
                ;; Failure

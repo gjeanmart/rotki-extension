@@ -4,24 +4,22 @@
 
 A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) ([Github](https://github.com/rotki/rotki)), the extension connects to Rotki backend API (running locally or remotely) and provides basic insights about your portfolio.
 
-<img src='https://i.ibb.co/Ny58NMM/Screenshot-at-Dec-11-10-42-06-1.png' width='200'>
+<img src='https://i.ibb.co/0J0j7vP/Screenshot-at-Dec-29-13-12-00-1.png' width='200'>
 
 ### Features
 - [X] Home: Assets list & balances, and net total
 - [X] Settings: Configure your Rotki backend endpoint, timeout, snapshot TTL and more
 - [X] Background worker: Data are refreshed and cached automatically by the service worker every 15 minutes (configurable)
 - [X] Offline access: Data and icons are cached by the extension, allowing access to the last state without having Rotki backend API running
+- [X] Extension icon reflects portfolio trend over the past 7 days
 
 ### Roadmap
-- [ ] Add icon's badge <img src='https://t3.ftcdn.net/jpg/05/72/97/80/360_F_572978085_QOpHNLOHSZGu9T5qXENChujPGytJ3mdo.jpg' height='10'> (up & down) to reflect the last 7d or 1m or 6m or 1y portfolio valuation trend
 - [ ] New page to display the accounts list
-- [ ] Force refresh option
 - [ ] Multi-currency support (convert USD value to EUR, GBP, etc.)
 - [ ] Multi-language support
 - [ ] Insert a button on Etherscan's account page to add an account to Rotki address book straight from Etherscan (and potentially other websites)
 - [ ] Improve light theme and implement dark theme
 - [ ] Release pipeline (increment version, tag, package)
-- [ ] Release to Chrome store
 
 ### Technologies
 
@@ -52,6 +50,9 @@ A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) 
 - Enable "Developer mode" (top-right corner)
 - Click on "Load unpacked" and select the folder `build`
 
+### Tests
+
+- Run `$ make test`
 
 ### Release on Chrome store
 

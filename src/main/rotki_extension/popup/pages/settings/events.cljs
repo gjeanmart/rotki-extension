@@ -6,4 +6,4 @@
  (fn [_ [_ data]]
    {:fx [[:chrome-extension/runtime:send-message {:action     :set-settings
                                                   :data       (dissoc data :loading? :updated?)
-                                                  :on-success [:core/boot]}]]}))
+                                                  :on-success [:core/boot {:force-refresh? true}]}]]}))

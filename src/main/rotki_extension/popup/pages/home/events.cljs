@@ -22,17 +22,17 @@
                                                     :data       {:url @url}
                                                     :on-success [:home/fetch-img-from-cache:success url]
                                                     :on-failure [:home/fetch-img-from-cache:failure url]}]]}
-     (do (reset! url "img/not_found.png") ;;TODO fx to update ratom
+     (do (reset! url "img/not_found.png") ;;[TODO] fx to update ratom
          {}))))
 
 (rf/reg-event-fx
  :home/fetch-img-from-cache:success
  (fn [_ [_ url img]] 
-   (reset! url img) ;;TODO fx to update ratom
+   (reset! url img) ;;[TODO] fx to update ratom
    {}))
 
 (rf/reg-event-fx
  :home/fetch-img-from-cache:failure
  (fn [_ [_ url _error]]
-   (reset! url "img/not_found.png") ;;TODO fx to update ratom
+   (reset! url "img/not_found.png") ;;[TODO] fx to update ratom
    {}))

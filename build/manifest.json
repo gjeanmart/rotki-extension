@@ -1,6 +1,6 @@
 {
   "name": "Rotki extension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Chrome extension for Rotki (https://rotki.com)",
   "manifest_version": 3,
   "author": "Gregoire Jeanmart <https://greg.jeanmart.me>",
