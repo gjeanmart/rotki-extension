@@ -1,6 +1,8 @@
 
 ## Rotki extension
 
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/jemlfdcemadboakidfbjalflglcnecmf?style=for-the-badge&label=Rotki%20extension)](https://chromewebstore.google.com/detail/rotki-extension/jemlfdcemadboakidfbjalflglcnecmf)
+
 
 A Chrome extension for [Rotki opensource portfolio tracker](https://rotki.com/) ([Github](https://github.com/rotki/rotki)), the extension connects to Rotki backend API (running locally or remotely) and provides basic insights about your portfolio.
 
